@@ -10,6 +10,15 @@ int main(void)
     height = get_height();
 
     printf("height: %i\n", height);
+
+    for (int i = 0; i < height; i++)
+    {
+        for (int j = 0; j <= i; j++)
+        {
+            printf("#");
+        }
+        printf("\n");
+    }
 }
 
 
