@@ -4,28 +4,23 @@
 
 int get_digit(long number, int d);
 int get_num_digits(long number);
+int get_sum_digits(long number);
+int checksum(long number);
 
 int main(void)
 {
     long number;
-    
-    int num_digits;
 
     // prompt for input
     number = get_long("Number: ");
-    num_digits = get_num_digits(number);
-    printf("num digits: %i\n", num_digits);
-    
-    for (int i = 1; i < num_digits + 1; i++)
-    {
-        printf("digit %i: %i\n", i, get_digit(number, i));
-    }
 
-    printf("number: %li\n", number);
+    checksum(number);
+
 
     return 0;
 }
 
+// get the number of digits in number
 int get_num_digits(long number)
 {
     int count = 0;
@@ -54,4 +49,60 @@ int get_digit(long number, int d)
     int digit = level % 10;
 
     return digit;
+}
+
+int get_sum_digits(long number)
+{
+    int numDigits = get_num_digits(number);
+    int digit;
+    int sum = 0;
+
+    
+
+    for (int i = 1; i < numDigits + 1; i++)
+    {
+        digit = get_digit(number, i);
+        sum += digit;
+    }
+
+    return sum;
+}
+
+int checksum(long number)
+{
+    int numDigits;
+    int digit;
+    int digitTimes2;
+    int sumDigitSet1 = 0;
+    int sumDigitSet2 = 0;
+
+    numDigits = get_num_digits(number);
+
+    printf("num digits: %i\n", numDigits);
+    printf("sum digits: %i\n", get_sum_digits(number));
+    
+    for (int i = 2; i < numDigits + 1; i += 2)
+    {
+        digit = get_digit(number, i);
+        digitTimes2 = digit * 2;
+
+        printf("other digit %i: %i, %i, %i\n", i, digit, digitTimes2 , get_sum_digits(digitTimes2));
+        sumDigitSet1 += get_sum_digits(digitTimes2);
+    }
+    printf("sum set 1: %i\n", sumDigitSet1);
+
+    for (int i = 1; i < numDigits + 1; i += 2)
+    {
+        digit = get_digit(number, i);
+        digitTimes2 = digit * 2;
+
+        printf("other digit %i: %i, %i, %i\n", i, digit, digitTimes2 , get_sum_digits(digitTimes2));
+        sumDigitSet2 += digit;
+    }
+    printf("sum set 2: %i\n", sumDigitSet2);
+
+    printf("total is %i with last digit %i\n", sumDigitSet1 + sumDigitSet2, get_digit((sumDigitSet1 + sumDigitSet2), 1));
+
+    return 0;
+
 }
