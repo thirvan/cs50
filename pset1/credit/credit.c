@@ -14,7 +14,14 @@ int main(void)
     // prompt for input
     number = get_long("Number: ");
 
-    checksum(number);
+    if (checksum(number) == 0)
+    {
+        printf("checksum is 0\n");
+    }
+    else
+    {
+        printf("invalid\n");
+    }
 
 
     return 0;
@@ -72,37 +79,45 @@ int checksum(long number)
 {
     int numDigits;
     int digit;
-    int digitTimes2;
-    int sumDigitSet1 = 0;
-    int sumDigitSet2 = 0;
+    int sum1 = 0;
+    int sum2 = 0;
+    int checksum;
 
     numDigits = get_num_digits(number);
 
     printf("num digits: %i\n", numDigits);
-    printf("sum digits: %i\n", get_sum_digits(number));
+    // printf("sum digits: %i\n", get_sum_digits(number));
     
-    for (int i = 2; i < numDigits + 1; i += 2)
+    for (int i = 1; i < numDigits + 1; i ++)
     {
         digit = get_digit(number, i);
-        digitTimes2 = digit * 2;
 
-        printf("other digit %i: %i, %i, %i\n", i, digit, digitTimes2 , get_sum_digits(digitTimes2));
-        sumDigitSet1 += get_sum_digits(digitTimes2);
+        if (i % 2 == 0)
+        {
+            // printf("other digit %i: %i, %i\n", i, digit, get_sum_digits(digit * 2));
+            sum1 += get_sum_digits(digit * 2);
+        }
+        else
+        {
+            sum2 += digit;
+        }
     }
-    printf("sum set 1: %i\n", sumDigitSet1);
+    // printf("sum set 1: %i\n", sum1);
+    // printf("sum set 2: %i\n", sum2);
 
-    for (int i = 1; i < numDigits + 1; i += 2)
-    {
-        digit = get_digit(number, i);
-        digitTimes2 = digit * 2;
+    // for (int i = 1; i < numDigits + 1; i += 2)
+    // {
+    //     digit = get_digit(number, i);
+    //     digitTimes2 = digit * 2;
 
-        printf("other digit %i: %i, %i, %i\n", i, digit, digitTimes2 , get_sum_digits(digitTimes2));
-        sumDigitSet2 += digit;
-    }
-    printf("sum set 2: %i\n", sumDigitSet2);
+    //     printf("other digit %i: %i, %i, %i\n", i, digit, digitTimes2 , get_sum_digits(digitTimes2));
+    //     sum2 += digit;
+    // }
+    // printf("sum set 2: %i\n", sum2);
 
-    printf("total is %i with last digit %i\n", sumDigitSet1 + sumDigitSet2, get_digit((sumDigitSet1 + sumDigitSet2), 1));
+    // printf("total is %i with last digit %i\n", sum1 + sum2, get_digit((sum1 + sum2), 1));
+    checksum = get_digit((sum1 + sum2), 1);
 
-    return 0;
+    return checksum;
 
 }
