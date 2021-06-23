@@ -3,20 +3,33 @@
 
 int main(void)
 {
-    int startSize = 0;
+    int startsize = 0;
+    int endsize = 0;
+    int numyears = 0;
 
-    // TODO: Prompt for start size
+    // Prompt for start size
     do
     {
-        startSize = get_int("Enter the start size (should be at least 9): ");
+        startsize = get_int("Enter the start size (at least 9): ");
     }
-    while (startSize < 9);
+    while (startsize < 9);
 
-    printf("Start size: %i\n", startSize);
 
-    // TODO: Prompt for end size
+    // Prompt for end size
+    do
+    {
+        endsize = get_int("Enter the end size (at least %i): ", startsize);
+    }
+    while (endsize < startsize);
 
-    // TODO: Calculate number of years until we reach threshold
+    // Calculate number of years until we reach threshold
+    while (startsize < endsize)
+    {
+        startsize = startsize + (startsize / 3) - (startsize / 4);
+        numyears++;
+    }
 
-    // TODO: Print number of years
+    // Print number of years
+    printf("Years: %i\n", numyears);
+
 }
