@@ -10,17 +10,59 @@ int checksum(long number);
 int main(void)
 {
     long number;
+    int numDigits, firstDigit, secondDigit;
 
     // prompt for input
     number = get_long("Number: ");
+    numDigits = get_num_digits(number);
 
     if (checksum(number) == 0)
     {
         printf("checksum is 0\n");
+        firstDigit = get_digit(number, numDigits);
+        secondDigit = get_digit(number, numDigits - 1);
+        printf("first: %i second: %i\n", firstDigit, secondDigit);
+
+
+        if (numDigits == 15 && firstDigit == 3)
+        {
+            if (secondDigit == 4 || secondDigit == 7)
+            {
+                printf("AMEX\n");
+            }
+            else
+            {
+                // printf("INVALID amex\n");
+                printf("INVALID\n");
+            }
+        }
+        else if (numDigits == 16 && firstDigit == 5)
+        {
+            if (secondDigit == 1 || secondDigit == 2 || secondDigit == 3 || 
+                secondDigit == 4 || secondDigit == 5)
+            {
+                printf("MASTERCARD\n");
+            }
+            else
+            {
+                // printf("INVALID master\n");
+                printf("INVALID\n");
+            }
+        }
+        else if ((numDigits == 13 || numDigits == 16) && firstDigit == 4)
+        {
+            printf("VISA\n");
+        }
+        else
+        {
+            // printf("INVALID visa\n");
+            printf("INVALID\n");
+        }
     }
     else
     {
-        printf("invalid\n");
+        // printf("INVALID checksum\n");
+        printf("INVALID\n");
     }
 
 
@@ -105,14 +147,6 @@ int checksum(long number)
     // printf("sum set 1: %i\n", sum1);
     // printf("sum set 2: %i\n", sum2);
 
-    // for (int i = 1; i < numDigits + 1; i += 2)
-    // {
-    //     digit = get_digit(number, i);
-    //     digitTimes2 = digit * 2;
-
-    //     printf("other digit %i: %i, %i, %i\n", i, digit, digitTimes2 , get_sum_digits(digitTimes2));
-    //     sum2 += digit;
-    // }
     // printf("sum set 2: %i\n", sum2);
 
     // printf("total is %i with last digit %i\n", sum1 + sum2, get_digit((sum1 + sum2), 1));
