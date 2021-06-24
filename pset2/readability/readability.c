@@ -2,18 +2,45 @@
 #include <cs50.h>
 #include <string.h>
 #include <ctype.h>
+#include <math.h>
 
 int count_letters(string text);
 int count_words(string text);
+int count_sentences(string text);
 
 int main(void)
 {
     string text = get_string("Text: ");
+    int num_letters = count_letters(text);
+    int num_words = count_words(text);
+    int num_sentences= count_sentences(text);
+
+    float L = (float) num_letters / num_words * 100;
+    float S = (float) num_sentences / num_words * 100;
+    float index = 0.0588 * L - 0.296 * S - 15.8;
+
     printf("%i letter(s)\n", count_letters(text));
     printf("%i word(s)\n", count_words(text));
+    printf("%i sentence(s)\n", count_sentences(text));
+    printf("L %f\n", L);
+    printf("S %f\n", S);
+    printf("index %f\n", index);
+
+    if (index < 1)
+    {
+        printf("Before Grade 1\n");
+    }
+    else if (index > 16)
+    {
+        printf("Grade 16+\n");
+    }
+    else
+    {
+        printf("Grade %i\n", (int) round(index));
+    }
 }
 
-// return the amount of alphabetical characters from text
+// count the amount of alphabetical characters from text
 int count_letters(string text)
 {
     int count = 0;
@@ -28,7 +55,7 @@ int count_letters(string text)
     return count;
 }
 
-// return the amount of words separated with a space in text
+// count the amount of words separated with a space in text
 int count_words(string text)
 {
     int count = 0;
@@ -41,6 +68,23 @@ int count_words(string text)
     }
     // increment count one extra time for the last word
     count++;
+
+    return count;
+}
+
+
+// count the amount of sentences in text
+int count_sentences(string text)
+{
+    int count = 0;
+    for (int i = 0, n = strlen(text); i < n; i++ )
+    {
+        char ch = text[i];
+        if (ch == '.' || ch == '!' || ch == '?')
+        {
+            count++;
+        }
+    }
 
     return count;
 }
