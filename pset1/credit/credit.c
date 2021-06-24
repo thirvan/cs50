@@ -18,10 +18,9 @@ int main(void)
 
     if (checksum(number) == 0)
     {
-        printf("checksum is 0\n");
+        // get the first two digits
         firstDigit = get_digit(number, numDigits);
         secondDigit = get_digit(number, numDigits - 1);
-        printf("first: %i second: %i\n", firstDigit, secondDigit);
 
 
         if (numDigits == 15 && firstDigit == 3)
@@ -32,7 +31,6 @@ int main(void)
             }
             else
             {
-                // printf("INVALID amex\n");
                 printf("INVALID\n");
             }
         }
@@ -45,7 +43,6 @@ int main(void)
             }
             else
             {
-                // printf("INVALID master\n");
                 printf("INVALID\n");
             }
         }
@@ -55,16 +52,13 @@ int main(void)
         }
         else
         {
-            // printf("INVALID visa\n");
             printf("INVALID\n");
         }
     }
     else
     {
-        // printf("INVALID checksum\n");
         printf("INVALID\n");
     }
-
 
     return 0;
 }
@@ -72,41 +66,42 @@ int main(void)
 // get the number of digits in number
 int get_num_digits(long number)
 {
-    int count = 0;
+    int num_digits = 0;
 
     if (number == 0)
     {
-        count = 1;
+        num_digits = 1;
     }
     else
     {
         while (number > 0)
         {
             number /= 10;
-            count++;
+            num_digits++;
         }
     }
 
-    return count;
+    return num_digits;
 }
 
 // get the digit d from number
 int get_digit(long number, int d)
 {
     long power =  pow(10, d - 1);
+    // truncate number to get level; a number whose last digit is the digit d
     long level = number / power;
+    // get the last digit from level
     int digit = level % 10;
 
     return digit;
 }
 
+// get the sum of the digits in number
 int get_sum_digits(long number)
 {
     int numDigits = get_num_digits(number);
     int digit;
     int sum = 0;
-
-    
 
     for (int i = 1; i < numDigits + 1; i++)
     {
@@ -117,41 +112,38 @@ int get_sum_digits(long number)
     return sum;
 }
 
+// use the checksum algorithm on number and return the total's last digit
 int checksum(long number)
 {
     int numDigits;
     int digit;
+    // store the sum of the digits not multiplied by 2
     int sum1 = 0;
+    // store the sum of the sum of the digits of the digits multiplied by 2
     int sum2 = 0;
     int checksum;
 
     numDigits = get_num_digits(number);
 
-    printf("num digits: %i\n", numDigits);
-    // printf("sum digits: %i\n", get_sum_digits(number));
-    
+    // loop for every digit from the first one to the last
     for (int i = 1; i < numDigits + 1; i ++)
     {
         digit = get_digit(number, i);
 
+        // if it is divisible by 2, multiply it by 2, make a sum of the 
+        // result's digits and increment sum1 by that sum 
         if (i % 2 == 0)
         {
-            // printf("other digit %i: %i, %i\n", i, digit, get_sum_digits(digit * 2));
             sum1 += get_sum_digits(digit * 2);
         }
+        // if not divisible by 2, increment sum2 by the digit
         else
         {
             sum2 += digit;
         }
     }
-    // printf("sum set 1: %i\n", sum1);
-    // printf("sum set 2: %i\n", sum2);
 
-    // printf("sum set 2: %i\n", sum2);
-
-    // printf("total is %i with last digit %i\n", sum1 + sum2, get_digit((sum1 + sum2), 1));
     checksum = get_digit((sum1 + sum2), 1);
 
     return checksum;
-
 }
