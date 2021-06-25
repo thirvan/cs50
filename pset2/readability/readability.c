@@ -13,18 +13,10 @@ int main(void)
     string text = get_string("Text: ");
     int num_letters = count_letters(text);
     int num_words = count_words(text);
-    int num_sentences= count_sentences(text);
-
+    int num_sentences = count_sentences(text);
     float L = (float) num_letters / num_words * 100;
     float S = (float) num_sentences / num_words * 100;
     float index = 0.0588 * L - 0.296 * S - 15.8;
-
-    printf("%i letter(s)\n", count_letters(text));
-    printf("%i word(s)\n", count_words(text));
-    printf("%i sentence(s)\n", count_sentences(text));
-    printf("L %f\n", L);
-    printf("S %f\n", S);
-    printf("index %f\n", index);
 
     if (index < 1)
     {
@@ -44,7 +36,7 @@ int main(void)
 int count_letters(string text)
 {
     int count = 0;
-    for (int i = 0, n = strlen(text); i < n; i++ )
+    for (int i = 0, n = strlen(text); i < n; i++)
     {
         if (isalpha(text[i]))
         {
@@ -59,7 +51,7 @@ int count_letters(string text)
 int count_words(string text)
 {
     int count = 0;
-    for (int i = 0, n = strlen(text); i < n; i++ )
+    for (int i = 0, n = strlen(text); i < n; i++)
     {
         if (text[i] == ' ')
         {
@@ -77,7 +69,7 @@ int count_words(string text)
 int count_sentences(string text)
 {
     int count = 0;
-    for (int i = 0, n = strlen(text); i < n; i++ )
+    for (int i = 0, n = strlen(text); i < n; i++)
     {
         char ch = text[i];
         if (ch == '.' || ch == '!' || ch == '?')
