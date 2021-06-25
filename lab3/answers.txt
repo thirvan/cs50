@@ -1,11 +1,21 @@
-sort1 uses: TODO
+sort1 uses: bubble sort
 
-How do you know?: TODO
+How do you know?: bubble sort has the worse performance for a reversed set of 
+data and in the best case where the data is already sorted, it should be faster 
+than the selection sort (sort3 here) due to its order being O(N) compared to 
+selection sort's O(N^2).
 
-sort2 uses: TODO
+sort2 uses: merge sort
 
-How do you know?: TODO
+How do you know?: merge sort has the consistent order of O(N log N) for all 
+cases and this reflects with the time taken for the consistent sorted, random 
+and reversed set of numbers. It is also the fastest algorithm of the three 
+which is especially releaving for the reversed sorted order there the other 2 
+algorithms have a much worse O(N^2) order.
 
-sort3 uses: TODO
+sort3 uses: selection sort
 
-How do you know?: TODO
+How do you know?: selection sort just like merge sort has a consistent big-O 
+notation for all three sets of numbers. It's time to sort the already sorted 
+data set is similar to both for the random and reversed data set while the time 
+for sort1 (the bubble sort) is much faster for the already sorted set.
