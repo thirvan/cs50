@@ -4,7 +4,7 @@
 #include <stdlib.h>
 #include <string.h>
 
-void cipher(string text, int k);
+void encipher(string text, int k);
 void usage(void);
 int validate_key(string key);
 
@@ -16,54 +16,50 @@ int main(int argc, string argv[])
         int k;
         k = validate_key(key);
 
-        // printf("key: %s\n", key);
-        // printf("k: %i\n", k);
-        
         if (k != -1)
         {
             string text = get_string("plaintext: ");
-            cipher(text, k);
+            encipher(text, k);
             printf("ciphertext: %s\n", text);
+            return 0;
         }
         else
         {
             usage();
             return 1;
         }
-        
-
     }
     else
     {
         usage();
         return 1;
     }
-
-    return 0;
-
 }
 
-void cipher(string text, int k)
+// Encrypt text with the key k
+void encipher(string text, int k)
 {
+    // Get number of shift to be between 0 and 25
     int offset = k % 26;
-    // printf("+ %i\n", offset);
 
     for (int i = 0, n = strlen(text); i < n; i++)
     {
-        int plain_ch = text[i];
+        int plain_ch = (int) text[i];
+
         int cipher_ch = plain_ch;
-        // printf("plain_ch %c %i\n", plain_ch, plain_ch); 
+        // If an alphabet, shift by k letters
         if (isalpha(plain_ch))
         {
             cipher_ch += offset;
-            // printf("cipher_ch before wrap %c %i\n", cipher_ch, cipher_ch);
 
-            if ((islower(plain_ch) && cipher_ch > 'z' ) || (isupper(plain_ch) && cipher_ch > 'Z'))
+            // If letter exceeds range of lower or uppercase, wrap back to 
+            // correct letter
+            if ((islower(plain_ch) && cipher_ch > 'z') || (isupper(plain_ch) && cipher_ch > 'Z'))
             {
                 cipher_ch -= 'Z' - 'A' + 1;
             }
         }
-        // printf("cipher_ch %c %i\n", cipher_ch, cipher_ch); 
+
         text[i] = (char) cipher_ch;
     }
 }
@@ -73,6 +69,8 @@ int validate_key(string key)
 {
     bool valid = true;
     int k = -1;
+
+    // Invalid if at least one character from key is not a digit
     for (int i = 0, n = strlen(key); i < n; i++)
     {
         char ch = key[i];
@@ -81,6 +79,8 @@ int validate_key(string key)
             valid = false;
         }
     }
+
+    // Convert key to int if valid else return is -1
     if (valid == true)
     {
         k = atoi(key);
@@ -89,6 +89,7 @@ int validate_key(string key)
     return k;
 }
 
+// Print the usage message of the program
 void usage(void)
 {
     printf("Usage: ./caesar key\n");
