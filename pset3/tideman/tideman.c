@@ -160,9 +160,18 @@ void sort_pairs(void)
     // TODO
     for (int i = 0; i < pair_count; i++)
     {
-        
+        for (int j = 0; j < pair_count - 1; j++)
+        {
+            int victory1 = pairs[i].winner - pairs[i].loser;
+            int victory2 = pairs[i + 1].winner - pairs[i + 1].loser;
+            if (victory1 > victory2)
+            {
+                pair temp = pairs[i];
+                pairs[i] = pairs[j];
+                pairs[j] = temp;
+            }
+        }
     }
-    return;
 }
 
 // Lock pairs into the candidate graph in order, without creating cycles
