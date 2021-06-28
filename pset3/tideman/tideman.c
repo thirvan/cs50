@@ -132,24 +132,44 @@ void add_pairs(void)
     pair_count = 0;
     for (int i = 0; i < candidate_count; i++)
     {
+        // Start loop at i to prevent chekcing already checked pairs
         for (int j = i; j < candidate_count; j++)
         {
-            if (preferences[i][j] > preferences[j][i])
+            int vote_candidate1 = preferences[i][j];
+            int vote_candidate2 = preferences[j][i];
+
+            if (vote_candidate1 != vote_candidate2)
             {
                 pair newpair;
-                newpair.winner = i;
-                newpair.loser = j;
+                if (vote_candidate1 > vote_candidate2)
+                {
+                    newpair.winner = i;
+                    newpair.loser = j;
+                }
+                else
+                {
+                    newpair.winner = j;
+                    newpair.loser = i;
+                }
                 pairs[pair_count] = newpair;
                 pair_count++;
             }
-            else if (preferences[i][j] < preferences[j][i])
-            {
-                pair newpair;
-                newpair.winner = j;
-                newpair.loser = i;
-                pairs[pair_count] = newpair;
-                pair_count++;
-            }
+            // if (preferences[i][j] > preferences[j][i])
+            // {
+            //     pair newpair;
+            //     newpair.winner = i;
+            //     newpair.loser = j;
+            //     pairs[pair_count] = newpair;
+            //     pair_count++;
+            // }
+            // else if (preferences[i][j] < preferences[j][i])
+            // {
+            //     pair newpair;
+            //     newpair.winner = j;
+            //     newpair.loser = i;
+            //     pairs[pair_count] = newpair;
+            //     pair_count++;
+            // }
         }
     }
 }
