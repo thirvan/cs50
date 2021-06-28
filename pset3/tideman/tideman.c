@@ -138,14 +138,17 @@ void add_pairs(void)
             int vote_candidate1 = preferences[i][j];
             int vote_candidate2 = preferences[j][i];
 
+            // Check if there is a winner
             if (vote_candidate1 != vote_candidate2)
             {
                 pair newpair;
+                // If votes of candidate 1 is stronger than candidate 2
                 if (vote_candidate1 > vote_candidate2)
                 {
                     newpair.winner = i;
                     newpair.loser = j;
                 }
+                // If votes of candidate 2 is stronger than candidate 1
                 else
                 {
                     newpair.winner = j;
