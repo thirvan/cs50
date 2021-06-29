@@ -35,6 +35,7 @@ void lock_pairs(void);
 void print_winner(void);
 int get_victory(int idx);
 bool check_cycle(int winner, int loser);
+int get_source(void);
 
 int main(int argc, string argv[])
 {
@@ -197,7 +198,7 @@ void sort_pairs(void)
     while (swap == true);
 }
 
-// Check if locking the pair pairs[winner][loser] will create a cyblj
+// Check if locking the pair pairs[winner][loser] will create a cycle
 bool check_cycle(int winner, int loser)
 {
     if (winner == loser)
@@ -250,10 +251,42 @@ void lock_pairs(void)
     }
 }
 
+// Get the index of the candidate who is the source of the graph
+// Return -1 if no source is found
+int get_source(void)
+{
+    for (int i = 0; i < candidate_count; i++)
+    {
+        bool winner = true;
+        for (int j = 0; j < candidate_count; j++)
+        {
+            if (locked[j][i] == true)
+            {
+                winner = false;
+            }
+        }
+        if (winner == true)
+        {
+            return i;
+        }
+    }
+
+    return -1;
+}
+
 // Print the winner of the election
 void print_winner(void)
 {
     // TODO
+    int winner = get_source();
+    if (winner != -1)
+    {
+        printf("%s\n", candidates[winner]);
+    }
+    else
+    {
+        printf("Error, graph does not have a source\n");
+    }
     return;
 }
 
