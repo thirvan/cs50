@@ -33,6 +33,7 @@ void add_pairs(void);
 void sort_pairs(void);
 void lock_pairs(void);
 void print_winner(void);
+int get_victory(int idx);
 
 int main(int argc, string argv[])
 {
@@ -161,24 +162,38 @@ void add_pairs(void)
     }
 }
 
+
+// Get the strength of victory of a pair in the pairs array at index idx
+int get_victory(int idx)
+{
+    int votes_winner = preferences[pairs[idx].winner][pairs[idx].loser];
+    int votes_loser = preferences[pairs[idx].loser][pairs[idx].winner];
+
+    return votes_winner - votes_loser;
+}
+
 // Sort pairs in decreasing order by strength of victory
 void sort_pairs(void)
 {
     // TODO
-    for (int i = 0; i < pair_count; i++)
+    int swap = false;
+    do
     {
-        for (int j = 0; j < pair_count - 1; j++)
+        for (int i = 0; i < pair_count - 1; i++)
         {
-            int victory1 = pairs[i].winner - pairs[i].loser;
-            int victory2 = pairs[i + 1].winner - pairs[i + 1].loser;
-            if (victory1 > victory2)
+            swap = false;
+            int victory1 = get_victory(i);
+            int victory2 = get_victory(i + 1);
+            if (victory1 < victory2)
             {
                 pair temp = pairs[i];
-                pairs[i] = pairs[j];
-                pairs[j] = temp;
+                pairs[i] = pairs[i + 1];
+                pairs[i + 1] = temp;
+                swap = true;
             }
         }
     }
+    while (swap == true);
 }
 
 // Lock pairs into the candidate graph in order, without creating cycles
