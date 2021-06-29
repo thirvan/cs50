@@ -34,6 +34,7 @@ void sort_pairs(void);
 void lock_pairs(void);
 void print_winner(void);
 int get_victory(int idx);
+bool check_cycle(int winner, int loser);
 
 int main(int argc, string argv[])
 {
@@ -196,13 +197,45 @@ void sort_pairs(void)
     while (swap == true);
 }
 
+// Check if locking the pair pairs[winner][loser] will create a cyblj
+bool check_cycle(int winner, int loser)
+{
+    if (winner == loser)
+    {
+        return false;
+    }
+    else
+    {
+        for (int i = 0; i < candidate_count; i++)
+        {
+            if (locked[loser][i] == true)
+            {
+                if (locked[loser][winner] == true)
+                {
+                    return true;
+                }
+                else
+                {
+                    if (check_cycle(winner, i) == true)
+                    {
+                        return true;
+                    }
+
+                }
+            }
+        }
+
+        return false;
+    }
+}
+
 // Lock pairs into the candidate graph in order, without creating cycles
 void lock_pairs(void)
 {
     // TODO
-    for (int i = 0; i < MAX; i++)
+    for (int i = 0; i < candidate_count; i++)
     {
-        for (int j = 0; j < MAX; j++)
+        for (int j = 0; j < candidate_count; j++)
         {
             locked[i][j] = false;
         }
@@ -210,7 +243,10 @@ void lock_pairs(void)
 
     for (int i = 0; i < pair_count; i++)
     {
-        locked[pairs[i].winner][pairs[i].loser] = true;
+        if (check_cycle(pairs[i].winner, pairs[i].loser) == false)
+        {
+            locked[pairs[i].winner][pairs[i].loser] = true;
+        }
     }
 }
 
