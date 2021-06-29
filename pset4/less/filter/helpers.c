@@ -5,7 +5,9 @@
 
 
 int round_and_cap(float n);
-void blur_pixel(int row, int col, int height, int width, RGBTRIPLE image[height][width], RGBTRIPLE new_image[height][width]);
+void blur_pixel(int row, int col, int height, int width, 
+                RGBTRIPLE image[height][width], 
+                RGBTRIPLE new_image[height][width]);
 
 // Convert image to grayscale
 void grayscale(int height, int width, RGBTRIPLE image[height][width])
@@ -15,7 +17,7 @@ void grayscale(int height, int width, RGBTRIPLE image[height][width])
         for (int j = 0; j < width; j++)
         {
             float sum = image[i][j].rgbtBlue + image[i][j].rgbtGreen + 
-                    image[i][j].rgbtRed;
+                        image[i][j].rgbtRed;
             int average = round(sum / 3);
             image[i][j].rgbtRed = average;
             image[i][j].rgbtGreen = average;
@@ -25,6 +27,7 @@ void grayscale(int height, int width, RGBTRIPLE image[height][width])
     return;
 }
 
+// Round n to the closest integer and cap it at 255
 int round_and_cap(float n)
 {
     int result = round(n);
@@ -46,16 +49,16 @@ void sepia(int height, int width, RGBTRIPLE image[height][width])
             int originalRed = image[i][j].rgbtRed;
             int originalGreen = image[i][j].rgbtGreen;
             int originalBlue = image[i][j].rgbtBlue;
-
+            // Apply the sephia formula to get the new color values
             image[i][j].rgbtRed = round_and_cap(.393 * originalRed 
-                                              + .769 * originalGreen 
-                                              + .189 * originalBlue);
-            image[i][j].rgbtGreen= round_and_cap(.349 * originalRed 
-                                              + .686* originalGreen 
-                                              + .168* originalBlue);
-            image[i][j].rgbtBlue= round_and_cap(.272* originalRed 
-                                              + .534* originalGreen 
-                                              + .131* originalBlue);
+                                                + .769 * originalGreen 
+                                                + .189 * originalBlue);
+            image[i][j].rgbtGreen = round_and_cap(.349 * originalRed 
+                                                  + .686 * originalGreen 
+                                                  + .168 * originalBlue);
+            image[i][j].rgbtBlue = round_and_cap(.272 * originalRed 
+                                                 + .534 * originalGreen 
+                                                 + .131 * originalBlue);
         }
     }
     return;
@@ -68,8 +71,10 @@ void reflect(int height, int width, RGBTRIPLE image[height][width])
     for (int i = 0; i < height; i++)
     {
         int mid_idx = width / 2;
+        // Loop for each pixel in a row until its middle
         for (int j = 0; j < mid_idx; j++)
         {
+            // Swap the left pizel with its corresponding right pixel
             RGBTRIPLE temp;
             temp = image[i][j];
             image[i][j] = image[i][width - j - 1];
@@ -79,21 +84,28 @@ void reflect(int height, int width, RGBTRIPLE image[height][width])
     return;
 }
 
-void blur_pixel(int row, int col, int height, int width, RGBTRIPLE image[height][width], RGBTRIPLE new_image[height][width])
+// Make the average of the RGB values of the pixel at image[row][col] and store 
+// it in new_image[row][col]
+void blur_pixel(int row, int col, int height, int width, 
+                RGBTRIPLE image[height][width], 
+                RGBTRIPLE new_image[height][width])
 {
     float sum_red = 0;
     float sum_green = 0;
     float sum_blue = 0;
     int num_pixels = 0;
 
+    // Loop for the 9 pixels surrounding and including the middle one with i 
+    // and j as offsets for the row and column positions
     for (int i = -1; i < 2; i++)
     {
         for (int j = -1; j < 2; j++)
         {
             int cur_row = row + i;
             int cur_col = col + j;
+            // Check if the indices exist in the image
             if (cur_row >= 0 && cur_row < height 
-             && cur_col >= 0 && cur_col < width)
+                && cur_col >= 0 && cur_col < width)
             {
                 sum_red += image[cur_row][cur_col].rgbtRed;
                 sum_green += image[cur_row][cur_col].rgbtGreen;
@@ -124,18 +136,11 @@ void blur(int height, int width, RGBTRIPLE image[height][width])
     {
         for (int j = 0; j < width; j++)
         {
-            new_image[i][j] = image[i][j];
-        }
-    }
-
-    for (int i = 0; i < height; i++)
-    {
-        for (int j = 0; j < width; j++)
-        {
             blur_pixel(i, j, height, width, image, new_image);
         }
     }
 
+    // Replace the original image with the updated new image
     for (int i = 0; i < height; i++)
     {
         for (int j = 0; j < width; j++)
