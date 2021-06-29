@@ -201,39 +201,36 @@ void sort_pairs(void)
 // Check if locking the pair pairs[winner][loser] will create a cycle
 bool check_cycle(int winner, int loser)
 {
-    if (winner == loser)
+    for (int i = 0; i < candidate_count; i++)
     {
-        return false;
-    }
-    else
-    {
-        for (int i = 0; i < candidate_count; i++)
+        // For every edge of the loser
+        if (locked[loser][i] == true)
         {
-            if (locked[loser][i] == true)
+            // If the edge leads back to the winner
+            if (locked[loser][winner] == true)
             {
-                if (locked[loser][winner] == true)
+                return true;
+            }
+            // Recurse to find if has edge leading to winner
+            else
+            {
+                // Only return true if cycle is found, else do not return to 
+                // continue looping through candidates
+                if (check_cycle(winner, i) == true)
                 {
                     return true;
                 }
-                else
-                {
-                    if (check_cycle(winner, i) == true)
-                    {
-                        return true;
-                    }
 
-                }
             }
         }
-
-        return false;
     }
+    return false;
 }
 
 // Lock pairs into the candidate graph in order, without creating cycles
 void lock_pairs(void)
 {
-    // TODO
+    // Initialised all elements in locked to be false
     for (int i = 0; i < candidate_count; i++)
     {
         for (int j = 0; j < candidate_count; j++)
@@ -242,6 +239,7 @@ void lock_pairs(void)
         }
     }
 
+    // Lock pair only if it will not create a cycle
     for (int i = 0; i < pair_count; i++)
     {
         if (check_cycle(pairs[i].winner, pairs[i].loser) == false)
@@ -260,6 +258,8 @@ int get_source(void)
         bool winner = true;
         for (int j = 0; j < candidate_count; j++)
         {
+            // Winner will remain true if every element in the column of 
+            // candidate i is false
             if (locked[j][i] == true)
             {
                 winner = false;
@@ -270,14 +270,12 @@ int get_source(void)
             return i;
         }
     }
-
     return -1;
 }
 
 // Print the winner of the election
 void print_winner(void)
 {
-    // TODO
     int winner = get_source();
     if (winner != -1)
     {
