@@ -1,6 +1,11 @@
 #include <math.h>
+#include <stdio.h>
+#include <stdlib.h>
 #include "helpers.h"
 
+
+int round_and_cap(float n);
+void blur_pixel(int row, int col, int height, int width, RGBTRIPLE image[height][width], RGBTRIPLE new_image[height][width]);
 
 // Convert image to grayscale
 void grayscale(int height, int width, RGBTRIPLE image[height][width])
@@ -74,8 +79,70 @@ void reflect(int height, int width, RGBTRIPLE image[height][width])
     return;
 }
 
+void blur_pixel(int row, int col, int height, int width, RGBTRIPLE image[height][width], RGBTRIPLE new_image[height][width])
+{
+    float sum_red = 0;
+    float sum_green = 0;
+    float sum_blue = 0;
+    int num_pixels = 0;
+
+    for (int i = -1; i < 2; i++)
+    {
+        for (int j = -1; j < 2; j++)
+        {
+            int cur_row = row + i;
+            int cur_col = col + j;
+            if (cur_row >= 0 && cur_row < height 
+             && cur_col >= 0 && cur_col < width)
+            {
+                sum_red += image[cur_row][cur_col].rgbtRed;
+                sum_green += image[cur_row][cur_col].rgbtGreen;
+                sum_blue += image[cur_row][cur_col].rgbtBlue;
+                num_pixels++;
+            }
+        }
+    }
+
+    int avg_red = round(sum_red / num_pixels);
+    int avg_green = round(sum_green / num_pixels);
+    int avg_blue = round(sum_blue / num_pixels);
+
+    new_image[row][col].rgbtRed = avg_red;
+    new_image[row][col].rgbtGreen = avg_green;
+    new_image[row][col].rgbtBlue = avg_blue;
+
+}
+
+
 // Blur image
 void blur(int height, int width, RGBTRIPLE image[height][width])
 {
+    // Make a copy of the image
+    RGBTRIPLE new_image[height][width];
+
+    for (int i = 0; i < height; i++)
+    {
+        for (int j = 0; j < width; j++)
+        {
+            new_image[i][j] = image[i][j];
+        }
+    }
+
+    for (int i = 0; i < height; i++)
+    {
+        for (int j = 0; j < width; j++)
+        {
+            blur_pixel(i, j, height, width, image, new_image);
+        }
+    }
+
+    for (int i = 0; i < height; i++)
+    {
+        for (int j = 0; j < width; j++)
+        {
+            image[i][j] = new_image[i][j];
+        }
+    }
+
     return;
 }
