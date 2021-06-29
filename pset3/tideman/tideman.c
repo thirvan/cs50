@@ -103,7 +103,6 @@ int main(int argc, string argv[])
 // Update ranks given a new vote
 bool vote(int rank, string name, int ranks[])
 {
-    // TODO
     for (int i = 0; i < candidate_count; i++)
     {
         if (strcmp(candidates[i], name) == 0)
@@ -118,9 +117,10 @@ bool vote(int rank, string name, int ranks[])
 // Update preferences given one voter's ranks
 void record_preferences(int ranks[])
 {
-    // TODO
     for (int i = 0; i < candidate_count; i++)
     {
+        // Start j at i + 1 to only update votes for candidates lower than the 
+        // current one in the ranks array
         for (int j = i + 1; j < candidate_count; j++)
         {
             preferences[ranks[i]][ranks[j]]++;
@@ -131,7 +131,6 @@ void record_preferences(int ranks[])
 // Record pairs of candidates where one is preferred over the other
 void add_pairs(void)
 {
-    // TODO
     pair_count = 0;
     for (int i = 0; i < candidate_count; i++)
     {
@@ -177,13 +176,14 @@ int get_victory(int idx)
 // Sort pairs in decreasing order by strength of victory
 void sort_pairs(void)
 {
-    // TODO
+    // Use bubble sort
     int swap = false;
     do
     {
         for (int i = 0; i < pair_count - 1; i++)
         {
             swap = false;
+            // Get the strength of victory of each pair
             int victory1 = get_victory(i);
             int victory2 = get_victory(i + 1);
             if (victory1 < victory2)
