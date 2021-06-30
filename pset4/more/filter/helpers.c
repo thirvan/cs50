@@ -3,15 +3,13 @@
 #include <stdlib.h>
 #include "helpers.h"
 
-#include <unistd.h>
-
 int round_and_cap(float n);
 void blur_pixel(int row, int col, int height, int width, 
                 RGBTRIPLE image[height][width], 
                 RGBTRIPLE new_image[height][width]);
 void sobel_pixel(int row, int col, int height, int width, 
-                RGBTRIPLE image[height][width], 
-                RGBTRIPLE new_image[height][width]);
+                 RGBTRIPLE image[height][width], 
+                 RGBTRIPLE new_image[height][width]);
 int sobel_value(int row, int col, int height, int width, 
                 RGBTRIPLE image[height][width], char color);
 
@@ -132,6 +130,7 @@ int round_and_cap(float n)
     return result;
 }
 
+// Calculate the sobel value of a given color
 int sobel_value(int row, int col, int height, int width, 
                 RGBTRIPLE image[height][width], char color)
 {
@@ -140,7 +139,6 @@ int sobel_value(int row, int col, int height, int width,
     int kernelx[3][3] = {{-1, 0, 1}, {-2, 0, 2}, {-1, 0, 1}};
     int kernely[3][3] = {{-1, -2, -1}, {0, 0, 0}, {1, 2, 1}};
     int color_value;
-    // Check if the indices exist in the image
     for (int i = -1; i < 2; i++)
     {
         for (int j = -1; j < 2; j++)
@@ -148,6 +146,7 @@ int sobel_value(int row, int col, int height, int width,
             int cur_row = row + i;
             int cur_col = col + j;
 
+            // Check if the index exist in the image
             if (cur_row >= 0 && cur_row < height 
                 && cur_col >= 0 && cur_col < width)
             {
@@ -173,42 +172,25 @@ int sobel_value(int row, int col, int height, int width,
                 color_value = 0;
             }
 
-            if (color == 'R')
-            {
-                // printf("%i, ", color_value);
-            } 
-
             sum_Gx += color_value * kernelx[i + 1][j + 1];
             sum_Gy += color_value * kernely[i + 1][j + 1];
         }
     }
-
-    // float Gx = sum_Gx / 9;
-    // float Gy = sum_Gy / 9;
     float Gx = sum_Gx;
     float Gy = sum_Gy;
 
-    if (color == 'R')
-    {
-        // printf(" Gx: %f Gy: %f - return %i \n", Gx, Gy, round_and_cap(sqrt(Gx * Gx + Gy * Gy)));
-    }
-    // sleep(1);
     return round_and_cap(sqrt(Gx * Gx + Gy * Gy));
 }
 
-// Make the average of the RGB values of the pixel at image[row][col] and store 
-// it in new_image[row][col]
+// Calculate the new pixel value using the sobel operator
 void sobel_pixel(int row, int col, int height, int width, 
-                RGBTRIPLE image[height][width], 
-                RGBTRIPLE new_image[height][width])
+                 RGBTRIPLE image[height][width], 
+                 RGBTRIPLE new_image[height][width])
 {
-
-    // Loop for the 9 pixels surrounding and including the middle one with i 
-    // and j as offsets for the row and column positions
+    // Calculate the sobel value for each color channel
     new_image[row][col].rgbtRed = sobel_value(row, col, height, width, image, 'R');
     new_image[row][col].rgbtGreen = sobel_value(row, col, height, width, image, 'G');
     new_image[row][col].rgbtBlue = sobel_value(row, col, height, width, image, 'B');
-
 }
 
 // Detect edges
