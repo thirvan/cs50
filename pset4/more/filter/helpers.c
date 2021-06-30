@@ -3,6 +3,8 @@
 #include <stdlib.h>
 #include "helpers.h"
 
+#include <unistd.h>
+
 int round_and_cap(float n);
 void blur_pixel(int row, int col, int height, int width, 
                 RGBTRIPLE image[height][width], 
@@ -10,6 +12,8 @@ void blur_pixel(int row, int col, int height, int width,
 void sobel_pixel(int row, int col, int height, int width, 
                 RGBTRIPLE image[height][width], 
                 RGBTRIPLE new_image[height][width]);
+int sobel_value(int row, int col, int height, int width, 
+                RGBTRIPLE image[height][width], char color);
 
 // Convert image to grayscale
 void grayscale(int height, int width, RGBTRIPLE image[height][width])
@@ -129,9 +133,12 @@ int round_and_cap(float n)
 }
 
 int sobel_value(int row, int col, int height, int width, 
-                RGBTRIPLE image[height][width], int kernel[3][3], char color)
+                RGBTRIPLE image[height][width], char color)
 {
-    int sum = 0;
+    float sum_Gx = 0;
+    float sum_Gy = 0;
+    int kernelx[3][3] = {{-1, 0, 1}, {-2, 0, 2}, {-1, 0, 1}};
+    int kernely[3][3] = {{-1, -2, -1}, {0, 0, 0}, {1, 2, 1}};
     int color_value;
     // Check if the indices exist in the image
     for (int i = -1; i < 2; i++)
@@ -141,33 +148,52 @@ int sobel_value(int row, int col, int height, int width,
             int cur_row = row + i;
             int cur_col = col + j;
 
-            if (row >= 0 && row < height 
-                && col >= 0 && col < width)
+            if (cur_row >= 0 && cur_row < height 
+                && cur_col >= 0 && cur_col < width)
             {
                 switch (color)
                 {
-                case 'R':
-                    color_value = image[cur_row][cur_col].rgbtRed;
-                    break;
-                case 'G':
-                    color_value = image[cur_row][cur_col].rgbtGreen;
-                    break;
-                case 'B':
-                    color_value = image[cur_row][cur_col].rgbtBlue;
-                    break;
-                
-                default:
-                    fprintf(stderr, "Error with char passed to sobel_value()\n");
-                    return -1;
+                    case 'R':
+                        color_value = image[cur_row][cur_col].rgbtRed;
+                        break;
+                    case 'G':
+                        color_value = image[cur_row][cur_col].rgbtGreen;
+                        break;
+                    case 'B':
+                        color_value = image[cur_row][cur_col].rgbtBlue;
+                        break;
+                    
+                    default:
+                        fprintf(stderr, "Error with char passed to sobel_value()\n");
+                        return -1;
                 }
             }
-                sum_red += image[cur_row][cur_col].rgbtRed;
-                sum_green += image[cur_row][cur_col].rgbtGreen;
-                sum_blue += image[cur_row][cur_col].rgbtBlue;
+            else
+            {
+                color_value = 0;
+            }
+
+            if (color == 'R')
+            {
+                // printf("%i, ", color_value);
+            } 
+
+            sum_Gx += color_value * kernelx[i + 1][j + 1];
+            sum_Gy += color_value * kernely[i + 1][j + 1];
         }
     }
 
+    // float Gx = sum_Gx / 9;
+    // float Gy = sum_Gy / 9;
+    float Gx = sum_Gx;
+    float Gy = sum_Gy;
 
+    if (color == 'R')
+    {
+        // printf(" Gx: %f Gy: %f - return %i \n", Gx, Gy, round_and_cap(sqrt(Gx * Gx + Gy * Gy)));
+    }
+    // sleep(1);
+    return round_and_cap(sqrt(Gx * Gx + Gy * Gy));
 }
 
 // Make the average of the RGB values of the pixel at image[row][col] and store 
@@ -176,25 +202,12 @@ void sobel_pixel(int row, int col, int height, int width,
                 RGBTRIPLE image[height][width], 
                 RGBTRIPLE new_image[height][width])
 {
-    float sum_Gx_red = 0;
-    float sum_Gy_red = 0;
-    float sum_Gx_green = 0;
-    float sum_Gy_green = 0;
-    float sum_Gx_blue = 0;
-    float sum_Gy_blue = 0;
-    int Gx[3][3] = {{-1, 0, 1}, {-2, 0, 2}, {-1, 0, 1}};
-    int Gy[3][3] = {{-1, -2, -1}, {0, 0, 0}, {1, 2, 1}};
 
     // Loop for the 9 pixels surrounding and including the middle one with i 
     // and j as offsets for the row and column positions
-
-    int avg_red = round(sum_red / num_pixels);
-    int avg_green = round(sum_green / num_pixels);
-    int avg_blue = round(sum_blue / num_pixels);
-
-    new_image[row][col].rgbtRed = avg_red;
-    new_image[row][col].rgbtGreen = avg_green;
-    new_image[row][col].rgbtBlue = avg_blue;
+    new_image[row][col].rgbtRed = sobel_value(row, col, height, width, image, 'R');
+    new_image[row][col].rgbtGreen = sobel_value(row, col, height, width, image, 'G');
+    new_image[row][col].rgbtBlue = sobel_value(row, col, height, width, image, 'B');
 
 }
 
@@ -208,7 +221,7 @@ void edges(int height, int width, RGBTRIPLE image[height][width])
     {
         for (int j = 0; j < width; j++)
         {
-            blur_pixel(i, j, height, width, image, new_image);
+            sobel_pixel(i, j, height, width, image, new_image);
         }
     }
 
