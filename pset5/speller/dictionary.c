@@ -18,7 +18,7 @@ typedef struct node
 node;
 
 // Number of buckets in hash table
-const unsigned int N = 26;
+const unsigned int N = 10000;
 
 // Hash table
 node *table[N];
@@ -47,7 +47,21 @@ bool check(const char *word)
 unsigned int hash(const char *word)
 {
     // TODO
-    return (toupper(word[0]) - 'A') % N;
+    // from http://www.cse.yorku.ca/~oz/hash.html
+    unsigned long hash = 5381;
+    int c;
+
+    for (int i = 0, n = strlen(word); i < n; i++)
+    {
+        c = toupper(word[i]);
+        // Use bitshifting to multiply by 33 and c
+        hash = ((hash << 5) + hash) + c;
+    }
+
+    return hash % N;
+
+    // First implementation with 26 buckets corresponding to first letter
+    // return (toupper(word[0]) - 'A') % N;
 }
 
 // Loads dictionary into memory, returning true if successful, else false
