@@ -31,12 +31,13 @@ bool check(const char *word)
     int idx = hash(word);
     node *cursor = table[idx];
 
-    while(cursor != NULL)
+    while (cursor != NULL)
     {
         if (strcasecmp(cursor->word, word) == 0)
         {
             return true;
         }
+        cursor = cursor->next;
     }
 
     return false;
@@ -46,7 +47,7 @@ bool check(const char *word)
 unsigned int hash(const char *word)
 {
     // TODO
-    return (toupper(word[0]) - 39) % N;
+    return (toupper(word[0]) - 'A') % N;
 }
 
 // Loads dictionary into memory, returning true if successful, else false
@@ -82,6 +83,8 @@ bool load(const char *dictionary)
         table[idx] = new_node;
         table_size++;
     }
+
+    fclose(file);
 
     return true;
 }
