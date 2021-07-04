@@ -2,6 +2,8 @@
 
 #include <stdbool.h>
 #include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
 #include <strings.h>
 #include <ctype.h>
 
@@ -27,8 +29,7 @@ bool check(const char *word)
 {
     // TODO
     int idx = hash(word);
-    node *head = table[idx];
-    node *cursor = head->next;
+    node *cursor = table[idx];
 
     while(cursor != NULL)
     {
@@ -96,5 +97,20 @@ unsigned int size(void)
 bool unload(void)
 {
     // TODO
-    return false;
+    node *cursor, *tmp;
+
+    for (int i = 0; i < N; i++)
+    {
+        cursor = table[i];
+        tmp = cursor;
+        while (cursor != NULL)
+        {
+            cursor = cursor->next;
+            free(tmp);
+            tmp = cursor;
+        }
+    }
+
+
+    return true;
 }
