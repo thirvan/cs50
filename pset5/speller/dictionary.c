@@ -2,7 +2,7 @@
 
 #include <stdbool.h>
 #include <stdio.h>
-#include <string.h>
+#include <strings.h>
 #include <ctype.h>
 
 #include "dictionary.h"
@@ -26,6 +26,18 @@ int table_size = 0;
 bool check(const char *word)
 {
     // TODO
+    int idx = hash(word);
+    node *head = table[idx];
+    node *cursor = head->next;
+
+    while(cursor != NULL)
+    {
+        if (strcasecmp(cursor->word, word) == 0)
+        {
+            return true;
+        }
+    }
+
     return false;
 }
 
