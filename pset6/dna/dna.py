@@ -14,33 +14,25 @@ def main():
         for person in reader:
             persons.append(person)
     
-    print(persons)
 
     # Read DNA sequence
     with open(sys.argv[2], "r") as sequencefile:
         sequence = sequencefile.readline()
     
-    print(header)
-    print(sequence)
-
     srts = header[1:]
 
     srt_counts = []
     for srt in srts:
-        print(srt)
         count = get_longest_run(sequence, srt)
         srt_counts.append(count)
 
-    srt_counts = [4, 1, 5]
-    print(srt_counts)
     match = False
     i = 0
     while match == False and i < len(persons):
         person = persons[i]
-        print(person[0])
 
         person_srt_counts = [ int(count) for count in  person[1:]]
-        print(person_srt_counts)
+        # print(person_srt_counts)
         if person_srt_counts == srt_counts:
             match = True
             print(person[0])
@@ -54,13 +46,13 @@ def main():
 # Return the maximum number of times that SRT repeats in sequence
 def get_longest_run(sequence, srt):
     max = 0
-    print(srt)
+    # print(srt)
 
     srtlen = (len(srt))
-    print(srtlen)
+    # print(srtlen)
 
     for i in range(len(sequence) - srtlen):
-        print("i: " + str(i))
+        # print("i: " + str(i))
         repeats = get_num_repeats(sequence, srt, i)
         if max < repeats:
             max = repeats
@@ -74,22 +66,22 @@ def get_num_repeats(sequence, srt, idx):
 
     while repeated:
 
-        repeated_srt_idx = idx + (len(srt) * (count + 1))
-        sub_sequence = sequence[idx:repeated_srt_idx]
+        end_idx = idx + (len(srt) * (count + 1))
+        sub_sequence = sequence[idx:end_idx]
         repeated_srt = srt * (count + 1)
 
-        print("repeated_srt_idx: " + str(repeated_srt_idx))
-        print(f"sub_sequence: {sub_sequence}")
-        print(f"repeated_srt: {repeated_srt}")
+        # print(f"idx: {idx}")
+        # print("end_idx: " + str(end_idx))
+        # print(f"sub_sequence: {sub_sequence}")
+        # print(f"repeated_srt: {repeated_srt}")
 
         if sub_sequence == repeated_srt:
             count += 1
-            print(sequence[idx:idx + (len(srt) * count + 1)])
-            print('     MATCH')
-            print("count: " + str(count))
+            # print(sub_sequence)
+            # print('     MATCH')
+            # print(f"count: {count}")
         else:
             repeated = False
-
 
     return count
 
