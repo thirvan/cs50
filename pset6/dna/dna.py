@@ -74,11 +74,11 @@ def get_num_repeats(sequence, srt, idx):
 
     while repeated:
 
-        sub_sequence_idx = idx + (len(srt) * (count + 1))
-        sub_sequence = sequence[idx:sub_sequence_idx]
+        repeated_srt_idx = idx + (len(srt) * (count + 1))
+        sub_sequence = sequence[idx:repeated_srt_idx]
         repeated_srt = srt * (count + 1)
 
-        print("sub_sequence_idx: " + str(sub_sequence_idx))
+        print("repeated_srt_idx: " + str(repeated_srt_idx))
         print(f"sub_sequence: {sub_sequence}")
         print(f"repeated_srt: {repeated_srt}")
 
