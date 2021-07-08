@@ -56,19 +56,17 @@ WHERE year=2020 AND month=7 AND day=28 AND hour=10 AND minute <= 25 AND activity
 -- 10|21|L93JTIZ
 -- 10|23|322W7JE
 -- 10|23|0NTHK55
--- 10|35|1106N58
 
 -- Get name of every person matching the licence plates retrieved
 SELECT name 
 FROM people 
 WHERE license_plate IN (SELECT license_plate 
                         FROM courthouse_security_logs 
-                        WHERE year=2020 AND month=7 AND day=28 AND hour=10 AND activity="exit");
+                        WHERE year=2020 AND month=7 AND day=28 AND hour=10 AND minute <= 25 AND activity="exit");
 -- Patrick
 -- Amber
 -- Elizabeth
 -- Roger
--- Madison
 -- Danielle
 -- Russell
 -- Evelyn
@@ -160,7 +158,7 @@ FROM people
 WHERE license_plate IN 
 (SELECT license_plate 
  FROM courthouse_security_logs 
- WHERE year=2020 AND month=7 AND day=28 AND hour=10 AND activity="exit")
+ WHERE year=2020 AND month=7 AND day=28 AND hour=10 AND minute <= 25 AND activity="exit")
 
 INTERSECT
 
@@ -182,9 +180,8 @@ WHERE phone_number IN
 (SELECT caller
  FROM phone_calls 
  WHERE year=2020 AND month=7 AND day=28 AND duration < 60);
--- The following three persons match all three queries and are suspects
+-- The following two persons match all three queries and are suspects
 -- Ernest
--- Madison
 -- Russell
 SELECT "---------------------------------" AS '';
 
@@ -201,7 +198,7 @@ WHERE year=2020 AND month=7 AND day=28 AND duration < 60
                                   WHERE license_plate IN 
                                   (SELECT license_plate 
                                   FROM courthouse_security_logs 
-                                  WHERE year=2020 AND month=7 AND day=28 AND hour=10 AND activity="exit")
+                                  WHERE year=2020 AND month=7 AND day=28 AND hour=10 AND minute <= 25 AND activity="exit")
                                   INTERSECT
                                   SELECT name 
                                   FROM people 
@@ -220,7 +217,6 @@ WHERE year=2020 AND month=7 AND day=28 AND duration < 60
                                   FROM phone_calls 
                                   WHERE year=2020 AND month=7 AND day=28 AND duration < 60)));
 -- Ernest|Berthold
--- Madison|James
 -- Russell|Philip
 
 SELECT "---------------------------------" AS '';
@@ -236,17 +232,17 @@ SELECT id, destination_airport_id, hour, minute
 FROM flights 
 WHERE year=2020 AND month=7 AND day=29 AND origin_airport_id=(SELECT id 
                                                               FROM airports 
-                                                              WHERE abbreviation="CSF") 
+                                                              WHERE abbreviation="CSF")
                                                               ORDER BY hour, minute 
                                                               LIMIT 1;
 -- 36|4|8|20
 -- The flight the thief took had flight id 36 going to the airport with id 4 at 8:20
 
 -- Get the name of the destination of the thief
-SELECT full_name 
+SELECT city
 FROM airports 
 WHERE id=4;
--- Heathrow Airport
+-- London
 
 SELECT "---------------------------------" AS '';
 -- Get the passport number of the passengers on the flight with id 36
@@ -275,33 +271,6 @@ WHERE passport_number IN (SELECT passport_number
 -- Ernest
 -- Doris
 
--- Madison and Ernest are the two remaining suspects
-
-SELECT "---------------------------------" AS '';
-SELECT name 
-FROM people 
-WHERE license_plate IN 
-(SELECT license_plate 
- FROM courthouse_security_logs 
- WHERE year=2020 AND month=7 AND day=28 AND hour=10 AND minute <= 25 AND activity="exit")
-
-INTERSECT
-
-SELECT name 
-FROM people 
-WHERE id IN
-(SELECT person_id 
- FROM bank_accounts 
- WHERE account_number IN
-(SELECT account_number
- FROM atm_transactions 
- WHERE month=7 AND day=28 AND atm_location="Fifer Street" AND transaction_type="withdraw"))
-
-INTERSECT
-
-SELECT name
-FROM people
-WHERE phone_number IN
-(SELECT caller
- FROM phone_calls 
- WHERE year=2020 AND month=7 AND day=28 AND duration < 60);
+-- Ernest is the two suspect and should be the thief
+-- He escaped to London
+-- His accomplice is Berthold
