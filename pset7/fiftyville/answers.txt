@@ -1,3 +1,3 @@
-The THIEF is:
-The thief ESCAPED TO:
-The ACCOMPLICE is:
+The THIEF is: Ernest
+The thief ESCAPED TO: London
+The ACCOMPLICE is: Berthold
