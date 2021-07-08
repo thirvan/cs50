@@ -59,6 +59,22 @@ WHERE year=2020 AND month=7 AND day=28 AND hour=10 AND activity="exit";
 -- 10|23|0NTHK55
 -- 10|35|1106N58
 
+-- Get name of every person matching the licence plates retrieved
+SELECT name 
+FROM people 
+WHERE license_plate IN (SELECT license_plate 
+                        FROM courthouse_security_logs 
+                        WHERE year=2020 AND month=7 AND day=28 AND hour=10 AND activity="exit");
+-- Results:
+-- Patrick
+-- Amber
+-- Elizabeth
+-- Roger
+-- Madison
+-- Danielle
+-- Russell
+-- Evelyn
+-- Ernest
 
 -- CHEKING atm_transactions
 SELECT account_number, amount 
@@ -75,6 +91,23 @@ WHERE month=7 AND day=28 AND atm_location="Fifer Street" AND transaction_type="w
 -- 81061156|30
 -- 26013199|35
 
+-- Get name of every person matching account numbers retrieved
+SELECT name 
+FROM people 
+WHERE id IN (SELECT person_id 
+             FROM bank_accounts 
+             WHERE account_number IN (SELECT account_number 
+                                      FROM atm_transactions 
+                                      WHERE month=7 AND day=28 AND atm_location="Fifer Street" AND transaction_type="withdraw"));
+-- Results:
+-- Bobby
+-- Elizabeth
+-- Victoria
+-- Madison
+-- Roy
+-- Danielle
+-- Russell
+-- Ernest
 -- CHEKING phone_calls
 SELECT caller, receiver
 FROM phone_calls 
