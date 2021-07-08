@@ -65,7 +65,6 @@ FROM people
 WHERE license_plate IN (SELECT license_plate 
                         FROM courthouse_security_logs 
                         WHERE year=2020 AND month=7 AND day=28 AND hour=10 AND activity="exit");
--- Results:
 -- Patrick
 -- Amber
 -- Elizabeth
@@ -99,7 +98,6 @@ WHERE id IN (SELECT person_id
              WHERE account_number IN (SELECT account_number 
                                       FROM atm_transactions 
                                       WHERE month=7 AND day=28 AND atm_location="Fifer Street" AND transaction_type="withdraw"));
--- Results:
 -- Bobby
 -- Elizabeth
 -- Victoria
@@ -108,6 +106,7 @@ WHERE id IN (SELECT person_id
 -- Danielle
 -- Russell
 -- Ernest
+
 -- CHEKING phone_calls
 SELECT caller, receiver
 FROM phone_calls 
@@ -123,3 +122,36 @@ WHERE year=2020 AND month=7 AND day=28 AND duration < 60;
 -- (031) 555-6622|(910) 555-3251
 -- (826) 555-1652|(066) 555-9701
 -- (338) 555-6650|(704) 555-2131
+
+-- Get name of every person that made a call of less than a minute on that day
+SELECT name 
+FROM people 
+WHERE phone_number IN (SELECT caller 
+                       FROM phone_calls 
+                       WHERE year=2020 AND month=7 AND day=28 AND duration < 60) 
+ORDER BY phone_number;
+-- Kimberly
+-- Roger
+-- Madison
+-- Victoria
+-- Ernest
+-- Evelyn
+-- Russell
+-- Bobby
+
+-- Get name of every person that received a call of less than a minute on that day
+SELECT name 
+FROM people 
+WHERE phone_number IN (SELECT caller 
+                       FROM phone_calls 
+                       WHERE year=2020 AND month=7 AND day=28 AND duration < 60) 
+ORDER BY phone_number;
+-- Doris
+-- Berthold
+-- James
+-- Anna
+-- Melissa
+-- Philip
+-- Larry
+-- Jacqueline
+-- Jack
