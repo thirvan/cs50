@@ -128,30 +128,28 @@ SELECT name
 FROM people 
 WHERE phone_number IN (SELECT caller 
                        FROM phone_calls 
-                       WHERE year=2020 AND month=7 AND day=28 AND duration < 60) 
-ORDER BY phone_number;
--- Kimberly
--- Roger
--- Madison
--- Victoria
--- Ernest
--- Evelyn
--- Russell
+                       WHERE year=2020 AND month=7 AND day=28 AND duration < 60);
 -- Bobby
+-- Roger
+-- Victoria
+-- Madison
+-- Russell
+-- Evelyn
+-- Ernest
+-- Kimberly
 
 -- Get name of every person that received a call of less than a minute on that day
 SELECT name 
 FROM people 
-WHERE phone_number IN (SELECT caller 
+WHERE phone_number IN (SELECT receiver 
                        FROM phone_calls 
-                       WHERE year=2020 AND month=7 AND day=28 AND duration < 60) 
-ORDER BY phone_number;
--- Doris
--- Berthold
+                       WHERE year=2020 AND month=7 AND day=28 AND duration < 60);
 -- James
--- Anna
--- Melissa
--- Philip
 -- Larry
--- Jacqueline
+-- Anna
 -- Jack
+-- Melissa
+-- Jacqueline
+-- Philip
+-- Berthold
+-- Doris
