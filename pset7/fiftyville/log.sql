@@ -189,18 +189,34 @@ WHERE phone_number IN
 -- Russell
 SELECT "---------------------------------" AS '';
 
-SELECT people_caller.name, caller, people_receiver.name, receiver
+-- Get the name of the person that the suspect called
+SELECT people_caller.name, people_receiver.name
 FROM phone_calls 
 JOIN people people_caller
 ON phone_calls.caller = people_caller.phone_number
 JOIN people people_receiver 
 ON phone_calls.receiver = people_receiver.phone_number
-WHERE year=2020 AND month=7 AND day=28 AND duration < 60;
-
-
-
--- SELECT name 
--- FROM people 
--- WHERE phone_number IN (SELECT receiver 
---                        FROM phone_calls 
---                        WHERE year=2020 AND month=7 AND day=28 AND duration < 60);
+WHERE year=2020 AND month=7 AND day=28 AND duration < 60
+      AND (people_caller.name IN (SELECT name 
+                                  FROM people 
+                                  WHERE license_plate IN 
+                                  (SELECT license_plate 
+                                  FROM courthouse_security_logs 
+                                  WHERE year=2020 AND month=7 AND day=28 AND hour=10 AND activity="exit")
+                                  INTERSECT
+                                  SELECT name 
+                                  FROM people 
+                                  WHERE id IN
+                                  (SELECT person_id 
+                                  FROM bank_accounts 
+                                  WHERE account_number IN
+                                  (SELECT account_number
+                                  FROM atm_transactions 
+                                  WHERE month=7 AND day=28 AND atm_location="Fifer Street" AND transaction_type="withdraw"))
+                                  INTERSECT
+                                  SELECT name
+                                  FROM people
+                                  WHERE phone_number IN
+                                  (SELECT caller
+                                  FROM phone_calls 
+                                  WHERE year=2020 AND month=7 AND day=28 AND duration < 60)));
