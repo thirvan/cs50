@@ -154,7 +154,53 @@ WHERE phone_number IN (SELECT receiver
 -- Berthold
 -- Doris
 
+SELECT "---------------------------------" AS '';
+-- Retrieve the intersections form the three lists of names
+SELECT name 
+FROM people 
+WHERE license_plate IN 
+(SELECT license_plate 
+ FROM courthouse_security_logs 
+ WHERE year=2020 AND month=7 AND day=28 AND hour=10 AND activity="exit")
 
-SELECT name FROM people WHERE license_plate IN (SELECT license_plate 
-FROM courthouse_security_logs 
-WHERE year=2020 AND month=7 AND day=28 AND hour=10 AND activity="exit");
+INTERSECT
+
+SELECT name 
+FROM people 
+WHERE id IN
+(SELECT person_id 
+ FROM bank_accounts 
+ WHERE account_number IN
+(SELECT account_number
+ FROM atm_transactions 
+ WHERE month=7 AND day=28 AND atm_location="Fifer Street" AND transaction_type="withdraw"))
+
+INTERSECT
+
+SELECT name
+FROM people
+WHERE phone_number IN
+(SELECT caller
+ FROM phone_calls 
+ WHERE year=2020 AND month=7 AND day=28 AND duration < 60);
+-- The following three persons match all three queries and are suspects
+-- Ernest
+-- Madison
+-- Russell
+SELECT "---------------------------------" AS '';
+
+SELECT people_caller.name, caller, people_receiver.name, receiver
+FROM phone_calls 
+JOIN people people_caller
+ON phone_calls.caller = people_caller.phone_number
+JOIN people people_receiver 
+ON phone_calls.receiver = people_receiver.phone_number
+WHERE year=2020 AND month=7 AND day=28 AND duration < 60;
+
+
+
+-- SELECT name 
+-- FROM people 
+-- WHERE phone_number IN (SELECT receiver 
+--                        FROM phone_calls 
+--                        WHERE year=2020 AND month=7 AND day=28 AND duration < 60);
