@@ -39,16 +39,15 @@ WHERE day=28 AND month=7 AND transcript LIKE '%Courthouse%';
 -- tomorrow. The thief then asked the person on the other end of the phone to 
 -- purchase the flight ticket.
 -- TODO: Check for phone calls with a duration of less than a minute at around 
--- 10:15, check the earliest flights out of Fiftyville on 29/7, something 
--- concerning the other person 
+-- 10:15, check the earliest flight out of Fiftyville on 29/7 
 
 
 -- CHEKING courthouse_security_logs
 SELECT hour, minute, license_plate 
 FROM courthouse_security_logs 
-WHERE year=2020 AND month=7 AND day=28 AND hour=10 AND activity="exit";
+WHERE year=2020 AND month=7 AND day=28 AND hour=10 AND minute <= 25 AND activity="exit";
 -- The following are the time and license plates of vehicles leaving the 
--- courhouse around the time of the theft
+-- courhouse within 10 of the theft
 -- 10|16|5P2BI95
 -- 10|18|94KL13X
 -- 10|18|6P58WS2
@@ -189,7 +188,7 @@ WHERE phone_number IN
 -- Russell
 SELECT "---------------------------------" AS '';
 
--- Get the name of the person that the suspect called
+-- Get the names of the person that the suspects called
 SELECT people_caller.name, people_receiver.name
 FROM phone_calls 
 JOIN people people_caller
@@ -220,3 +219,89 @@ WHERE year=2020 AND month=7 AND day=28 AND duration < 60
                                   (SELECT caller
                                   FROM phone_calls 
                                   WHERE year=2020 AND month=7 AND day=28 AND duration < 60)));
+-- Ernest|Berthold
+-- Madison|James
+-- Russell|Philip
+
+SELECT "---------------------------------" AS '';
+-- I now have to investigate the flight that the thief took
+-- From the list of airporst, the one from which the thief took off is the Fiftyville one
+SELECT id, abbreviation, full_name 
+FROM airports 
+WHERE abbreviation="CSF";
+SELECT "---------------------------------" AS '';
+-- 8|CSF|Fiftyville Regional Airport
+-- Use this id to get the earliest flight that departed from Fiftyville on day after the theft
+SELECT id, destination_airport_id, hour, minute 
+FROM flights 
+WHERE year=2020 AND month=7 AND day=29 AND origin_airport_id=(SELECT id 
+                                                              FROM airports 
+                                                              WHERE abbreviation="CSF") 
+                                                              ORDER BY hour, minute 
+                                                              LIMIT 1;
+-- 36|4|8|20
+-- The flight the thief took had flight id 36 going to the airport with id 4 at 8:20
+
+-- Get the name of the destination of the thief
+SELECT full_name 
+FROM airports 
+WHERE id=4;
+-- Heathrow Airport
+
+SELECT "---------------------------------" AS '';
+-- Get the passport number of the passengers on the flight with id 36
+SELECT passport_number, seat
+FROM passengers 
+WHERE flight_id=36;
+-- 7214083635
+-- 1695452385
+-- 5773159633
+-- 1540955065
+-- 8294398571
+-- 1988161715
+-- 9878712108
+-- 8496433585
+SELECT "---------------------------------" AS '';
+SELECT name FROM people 
+WHERE passport_number IN (SELECT passport_number 
+                          FROM passengers 
+                          WHERE flight_id=36);
+-- Bobby
+-- Roger
+-- Madison
+-- Danielle
+-- Evelyn
+-- Edward
+-- Ernest
+-- Doris
+
+-- Madison and Ernest are the two remaining suspects
+
+SELECT "---------------------------------" AS '';
+SELECT name 
+FROM people 
+WHERE license_plate IN 
+(SELECT license_plate 
+ FROM courthouse_security_logs 
+ WHERE year=2020 AND month=7 AND day=28 AND hour=10 AND minute <= 25 AND activity="exit")
+
+INTERSECT
+
+SELECT name 
+FROM people 
+WHERE id IN
+(SELECT person_id 
+ FROM bank_accounts 
+ WHERE account_number IN
+(SELECT account_number
+ FROM atm_transactions 
+ WHERE month=7 AND day=28 AND atm_location="Fifer Street" AND transaction_type="withdraw"))
+
+INTERSECT
+
+SELECT name
+FROM people
+WHERE phone_number IN
+(SELECT caller
+ FROM phone_calls 
+ WHERE year=2020 AND month=7 AND day=28 AND duration < 60);
