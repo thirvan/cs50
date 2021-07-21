@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+
+<html>
+    <head>
+        <script>
+            function greet()
+            {
+                alert('hello ' + document.querySelector('#name').value);
+            }
+
+            function listen()
+            {
+                document.querySelector('form').addEventListener('submit', greet);
+            }
+
+            document.addEventListener('DOMContentLoaded', listen);
+        </script>
+        <title>hello</title>
+    </head>
+    <body>
+        <form>
+            <input autocomplete="off" autofocus id="name" placeholder="Name" type="text">
+            <input type="submit">
+        </form>
+    </body>
+</html>
