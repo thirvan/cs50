@@ -3,13 +3,10 @@
 <html>
     <head>
         <script>
-            function greet()
-            {
-                alert('hello ' + document.querySelector('#name').value);
-            }
-
             document.addEventListener('DOMContentLoaded', function() {
-                document.querySelector('form').addEventListener('submit', greet);
+                document.querySelector('form').addEventListener('submit', function() {
+                    alert('hello ' + document.querySelector('#name').value);
+                });
             });
 
         </script>
