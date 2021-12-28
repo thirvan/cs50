@@ -30,6 +30,28 @@
                         document.querySelector('#feedback1').innerHTML = "Incorrect!";
                     });
                 }
+
+
+                // When check button is clicked, check answer in input box
+                let checkButton = document.querySelector('#check');
+                checkButton.addEventListener('click', function() {
+                    let inputField = document.querySelector('#input');
+                    let inputAnswer = inputField.value;
+                    // If the answer is correct, change text field color to green
+                    if (inputAnswer.toLowerCase() === "yes")
+                    {
+                        inputField.style.backgroundColor = 'green';
+                        document.querySelector('#feedback2').innerHTML = "Correct!";
+
+                    // Else if the answer is incorrect, change text field color to red
+                    }
+                    else
+                    {
+                        inputField.style.backgroundColor = 'red';
+                        document.querySelector('#feedback2').innerHTML = "Incorrect!";
+                    }
+
+                });
             });
 
 
@@ -67,6 +89,11 @@
                 <hr>
 
                 <!-- TODO: Add free response question here -->
+                <h3>In the manga One Piece, will Usopp get conqueror's haki?</h3>
+                <input id="input" type="text"></input>
+                <button id="check">Check Answer</button>
+
+                <p id="feedback2"></p>
 
             </div>
 
